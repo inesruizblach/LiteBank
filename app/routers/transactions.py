@@ -11,7 +11,6 @@ router = APIRouter(
     tags=["transactions"],
 )
 
-
 def get_db():
     """
     Provide a database session dependency.

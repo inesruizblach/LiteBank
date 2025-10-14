@@ -1,0 +1,28 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.so
+
+# Databases
+*.db
+*.sqlite3
+
+# Virtual environments
+venv/
+.env
+.env.*
+*.env
+
+# IDE & Editor settings
+.vscode/
+.idea/
+
+# macOS / OS junk
+.DS_Store
+
+# Docker
+*.log
+postgres_data/
+
+# Alembic
+alembic/versions/__pycache__/

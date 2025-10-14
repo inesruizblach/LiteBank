@@ -23,7 +23,7 @@ class User(UserBase):
     """
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # --- Account ---
 class AccountBase(BaseModel):
@@ -46,7 +46,7 @@ class Account(AccountBase):
     id: int
     user_id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class TransactionBase(BaseModel):
     """
@@ -75,5 +75,5 @@ class Transaction(TransactionBase):
     timestamp: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 

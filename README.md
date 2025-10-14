@@ -94,6 +94,36 @@ Visit [http://127.0.0.1:8000](http://127.0.0.1:8000) and [http://127.0.0.1:8000/
 
 If no accounts or transactions exist yet, you can test the API as follows:
 
+### 1. List users
+
+```bash
+curl -X GET "http://127.0.0.1:8000/users/"
+```
+
+### 2. Create new users
+
+```bash
+curl -X POST "http://127.0.0.1:8000/users/" \
+-H "Content-Type: application/json" \
+-d '{"name":"User1","email":"user1@example.com"}'
+```
+
+```bash
+curl -X POST "http://127.0.0.1:8000/users/" \
+-H "Content-Type: application/json" \
+-d '{"name":"User2","email":"user2@example.com"}'
+```
+
+Expected responses:
+
+```json
+{"name":"User1","email":"user1@example.com","id":1}
+```
+
+```json
+{"name":"User2","email":"user2@example.com","id":2}
+```
+
 ### 1. Check accounts (empty)
 
 ```bash
