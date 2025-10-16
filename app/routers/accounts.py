@@ -4,7 +4,8 @@ API routes for account operations.
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from .. import crud, schemas, database
+from fastapi_jwt_auth import AuthJWT
+from .. import crud, schemas, database, models
 
 router = APIRouter(
     prefix="/accounts",
@@ -24,9 +25,10 @@ def get_db():
 
 
 @router.post("/", response_model=schemas.Account)
-def create_account(account: schemas.AccountCreate, db: Session = Depends(get_db)):
+def create_account(account: schemas.AccountCreate, db: Session = Depends(get_db),
+                   Authorize: AuthJWT = Depends()):
     """
-    Create a new account.
+    Create a new account for the authenticated user.
 
     Args:
         account (schemas.AccountCreate): Account creation details.
@@ -35,13 +37,19 @@ def create_account(account: schemas.AccountCreate, db: Session = Depends(get_db)
     Returns:
         schemas.Account: The created account.
     """
+    Authorize.jwt_required()
+    current_user_id = Authorize.get_jwt_subject()
+
+    # Force ownership
+    account.user_id = current_user_id
+
     return crud.create_account(db=db, account=account)
 
 
 @router.get("/", response_model=list[schemas.Account])
-def read_accounts(db: Session = Depends(get_db)):
+def read_accounts(db: Session = Depends(get_db), Authorize: AuthJWT = Depends()):
     """
-    Retrieve all accounts.
+    Retrieve all accounts belonging to the authenticated user.
 
     Args:
         db (Session): Database session (injected).
@@ -49,4 +57,6 @@ def read_accounts(db: Session = Depends(get_db)):
     Returns:
         list[schemas.Account]: List of accounts.
     """
-    return crud.get_accounts(db)
+    Authorize.jwt_required()
+    current_user_id = int(Authorize.get_jwt_subject())
+    return crud.get_accounts(db, user_id=current_user_id)

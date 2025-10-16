@@ -1,31 +1,37 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
+from enum import Enum
 
-# --- User ---
+# --- User Schemas---
 class UserBase(BaseModel):
     """
     Base schema for a user, containing common user fields.
     """
     name: str
-    email: str
+    email: EmailStr
 
 class UserCreate(UserBase):
     """
     Schema for creating a new user.
     Inherits name and email fields from UserBase.
     """
-    pass
+    password: str = Field(..., min_length=6)
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
 
 class User(UserBase):
     """
     Schema for returning user data, including the user ID.
     """
     id: int
-    class Config:
-        from_attributes = True
 
-# --- Account ---
+    class Config:
+        orm_mode = True
+
+# --- Account Schemas---
 class AccountBase(BaseModel):
     """
     Base schema for an account, containing the balance field.
@@ -37,7 +43,7 @@ class AccountCreate(AccountBase):
     Schema for creating a new account.
     Includes user_id to associate the account with a user.
     """
-    user_id: int
+    user_id: Optional[int] = None  # Will be filled from JWT in router
 
 class Account(AccountBase):
     """
@@ -45,35 +51,56 @@ class Account(AccountBase):
     """
     id: int
     user_id: int
+
     class Config:
-        from_attributes = True
+        orm_mode = True
+
+# --- Transaction Schemas---
+
+class TransactionType(str, Enum):
+    DEPOSIT = "deposit"
+    WITHDRAW = "withdraw"
 
 class TransactionBase(BaseModel):
     """
     Base schema for a transaction, such as a deposit or withdrawal.
     Includes the transaction type and amount.
     """
-    type: str  # e.g., 'deposit' or 'withdraw'
-    amount: float
+    type: TransactionType
+    amount: float = Field(..., gt=0)
 
-class TransactionCreate(BaseModel):
+class TransactionCreate(TransactionBase):
+    """
+    Schema for creating a new transaction.
+    Includes the associated account ID.
+    """
+    account_id: int
+
+class Transaction(TransactionBase):
+    """
+    Schema for returning transaction data with database metadata.
+    Includes transaction ID, associated account ID, and created_at.
+    """
+    id: int
+    account_id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+# --- Transfer Schema---
+
+class TransferCreate(BaseModel):
     """
     Schema for transferring funds between two accounts.
     Includes source and destination account IDs and the transfer amount.
     """
     from_account_id: int
     to_account_id: int
-    amount: float
+    amount: float = Field(..., gt=0)
 
-class Transaction(TransactionBase):
-    """
-    Schema for returning transaction data with database metadata.
-    Includes transaction ID, associated account ID, and timestamp.
-    """
-    id: int
-    account_id: int
-    timestamp: datetime
-
-    class Config:
-        from_attributes = True
-
+class TransferResponse(BaseModel):
+    """ Schema for transfer response details. """
+    message: str
+    from_account_balance: float
+    to_account_balance: float
