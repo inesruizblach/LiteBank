@@ -12,6 +12,11 @@ from . import models
 # Initialize FastAPI app
 app = FastAPI(title="LiteBank API 🏦")
 
+# Health check endpoint
+@app.get("/healthz")
+def health_check():
+    return {"status": "ok"}
+
 # Register API routers
 app.include_router(users.router)
 app.include_router(accounts.router)

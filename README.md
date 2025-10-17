@@ -1,32 +1,36 @@
 # LiteBank API 🏦
 
-**LiteBank API is a lightweight banking API I built with FastAPI and SQLAlchemy to manage accounts, transactions, and financial tracking.**
+**LiteBank** is a modern, lightweight banking API built with **FastAPI** and **SQLAlchemy** — designed to handle user accounts, transactions, and secure financial operations with JWT authentication.
 
 ---
 
 ## Features
 
-* Create user accounts
-* Deposit and withdraw funds
-* Transfer money between accounts
-* View transaction history
-* JWT-based authentication
+* 👤 Create and manage user profiles
+* 💰 Deposit and withdraw funds
+* 🔄 Transfer money between accounts
+* 🧾 View transaction history
+* 🔐 JWT-based authentication
+* 🐳 Dockerized for easy deployment
 
 ---
 
 ## Tech Stack
 
-* **Python 3.11+**
-* **FastAPI** – API framework
-* **SQLAlchemy** – ORM for database interactions
-* **SQLite/PostgreSQL** – database
-* **Uvicorn** – ASGI server
-* **FastAPI-JWT-Auth** – for authentication
-* **Pytest** – for unit testing
+| Category         | Technology          |
+| ---------------- | ------------------- |
+| Language         | Python 3.11         |
+| Framework        | FastAPI             |
+| ORM              | SQLAlchemy          |
+| Auth             | FastAPI-JWT-Auth    |
+| Database         | PostgreSQL / SQLite |
+| Server           | Uvicorn             |
+| Migrations       | Alembic             |
+| Containerization | Docker              |
 
 ---
 
-## Getting Started
+## Getting Started (Local)
 
 1. **Clone the repo**
 
@@ -37,13 +41,13 @@ cd LiteBank
 
 2. **Set up env**
 
-Option 1: Create a virtual environment
+Option A: Create a virtual environment
 ```bash
 python3 -m venv venv
 source venv/bin/activate   # macOS/Linux
 venv\Scripts\activate      # Windows
 ```
-Option 2: Create a conda environment
+Option B: Create a conda environment
 ```bash
 conda create -n litebank python=3.11
 conda activate litebank
@@ -55,19 +59,60 @@ conda activate litebank
 pip install -r requirements.txt
 ```
 
-4. **Run the API**
+4. **Run the API locally**
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-5. Visit [http://127.0.0.1:8000](http://127.0.0.1:8000) and [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) to explore the endpoints.
+5. Visit:
+* API Root → [http://127.0.0.1:8000](http://127.0.0.1:8000)
+* Interactive Docs → [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 ---
 
-## Quick Start Test Cases
+## Example Endpoints
 
-### User Endpoints
+### 👥 Users
+
+1. **List users**
+```bash
+GET /users/
+```
+
+2. **Create new users**
+```bash
+POST /users/
+```
+
+### 🔑 Authentication
+3. **Login to get JWT token**
+```bash
+POST /login
+```
+
+### 💵 Accounts (JWT required) 
+
+4. **Create and list accounts**
+```bash
+POST /accounts/
+GET /accounts/
+```
+
+### 💸 Transactions Endpoints (JWT required) 
+
+5. Perform deposits, withdrawals, or transfers:
+```bash
+POST /transactions/
+POST /transactions/transfer/
+GET /transactions/
+```
+
+---
+
+## Local Run Test Cases - Example API calls
+
+### 👥 Users
 
 1. **List users**
 ```bash
@@ -92,6 +137,7 @@ Expected response:
 {"id":1,"name":"User1","email":"user1@example.com"}
 ```
 
+### 🔑 Authentication
 3. **Login to get JWT token**
 ```bash
 curl -X POST "http://127.0.0.1:8000/login" \
@@ -107,7 +153,7 @@ Response:
 }
 ```
 
-### Accounts Endpoints (JWT required) 
+### 💵 Accounts (JWT required) 
 
 4. **Create accounts**
 ```bash
@@ -140,7 +186,7 @@ Expected response (empty if no accounts yet):
 []
 ```
 
-### Transactions Endpoints (JWT required) 
+### 💸 Transactions Endpoints (JWT required) 
 
 6. **Deposit funds**
 ```bash
@@ -200,14 +246,14 @@ curl -X GET "http://127.0.0.1:8000/transactions/" \
 ## Project Structure
 
 ```
-litebank-api/
+LiteBank/
 │── app/
-│   ├── main.py              # Entry point
-│   ├── models.py            # Database models
-│   ├── schemas.py           # Request/response models
-│   ├── database.py          # DB connection setup
-│   ├── crud.py              # DB operations
-│   ├── config.py            # JWT and app config
+│   ├── main.py              # FastAPI entrypoint
+│   ├── models.py            # SQLAlchemy models
+│   ├── schemas.py           # Pydantic schemas
+│   ├── crud.py              # Business logic and DB ops
+│   ├── database.py          # Database configuration
+│   ├── config.py            # App/JWT settings
 │   └── routers/
 │       ├── users.py
 │       ├── accounts.py
@@ -216,11 +262,40 @@ litebank-api/
 ├── alembic/                 # Database migrations
 │   └── versions/
 │
-├── docker/
-│   ├── Dockerfile
-│   └── docker-compose.yml
+├── .github/
+│   └── workflows/
+│       └── deploy.yml       # CI/CD pipeline for Render deployment
 │
-├── requirements.txt
+├── Dockerfile               # Docker build configuration
+├── docker-compose.yml       # Local dev environment
+├── requirements.txt         # Python dependencies
 └── README.md
 
 ```
+
+---
+
+## 🧰 Development Tools
+
+| Command                         | Description           |
+| ------------------------------- | --------------------- |
+| `uvicorn app.main:app --reload` | Run API locally       |
+| `alembic upgrade head`          | Run DB migrations     |
+| `pytest`                        | Run test suite        |
+| `docker compose up --build`     | Start app with Docker |
+
+---
+
+## 🌍 Deployment
+
+LiteBank can be easily deployed using Docker to any cloud platform supporting containerized apps (e.g., Render, AWS, or Railway).
+
+---
+
+## 📜 License
+
+This project is open-source and available under the **MIT License**.
+
+---
+
+Developed by [Inés Ruiz Blach](https://github.com/inesruizblach)
