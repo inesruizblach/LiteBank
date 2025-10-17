@@ -4,6 +4,15 @@
 
 ---
 
+## 🌐 Live Deployment
+
+LiteBank is now live and hosted on **Render** 🚀  
+🔗 **Live API:** [https://litebank.onrender.com](https://litebank.onrender.com)  
+🩺 **Health Check:** [https://litebank.onrender.com/healthz](https://litebank.onrender.com/healthz)  
+📘 **Interactive Docs:** [https://litebank.onrender.com/docs](https://litebank.onrender.com/docs)
+
+Deployed automatically via **GitHub Actions → Render** CI/CD pipeline.
+
 ## Features
 
 * 👤 Create and manage user profiles
@@ -27,6 +36,7 @@
 | Server           | Uvicorn             |
 | Migrations       | Alembic             |
 | Containerization | Docker              |
+| Deployment       | Render (via GitHub Actions) |
 
 ---
 
@@ -288,7 +298,12 @@ LiteBank/
 
 ## 🌍 Deployment
 
-LiteBank can be easily deployed using Docker to any cloud platform supporting containerized apps (e.g., Render, AWS, or Railway).
+LiteBank is automatically deployed to Render using a GitHub Actions workflow (.github/workflows/deploy.yml), which:
+1. Installs dependencies
+2. Runs Alembic migrations on the Render PostgreSQL database
+3. Triggers a new Render deploy
+
+🔗 Production URL: https://litebank.onrender.com
 
 ---
 
