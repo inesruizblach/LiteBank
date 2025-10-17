@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Set up Python 3.11 (needed for Alembic migrations)
+      # 2. Set up Python 3.11
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -26,16 +26,15 @@ jobs:
           pip install -r requirements.txt
           pip install alembic psycopg2-binary
 
-      # 4. Set environment variables from GitHub secrets
+      # 4. Set environment variables
       - name: Set environment variables
         run: |
           echo "DATABASE_URL=${{ secrets.RENDER_DATABASE_URL }}" >> $GITHUB_ENV
           echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> $GITHUB_ENV
 
-      # 5. Run Alembic migrations on Render DB
+      # 5. Run Alembic migrations
       - name: Run Alembic migrations
-        run: |
-          alembic upgrade head
+        run: alembic upgrade head
         env:
           DATABASE_URL: ${{ secrets.RENDER_DATABASE_URL }}
 
