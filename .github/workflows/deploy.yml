@@ -29,13 +29,13 @@ jobs:
       # 4. Set environment variables
       - name: Set environment variables
         run: |
-          echo "DATABASE_URL=${{ secrets.RENDER_DATABASE_URL }}" >> $GITHUB_ENV
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
           echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> $GITHUB_ENV
 
       # 5. Run Alembic migrations
       - name: Run Alembic migrations
         env:
-          DATABASE_URL: ${{ secrets.RENDER_DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           echo "Using DATABASE_URL=$DATABASE_URL"
           alembic upgrade head
