@@ -34,9 +34,11 @@ jobs:
 
       # 5. Run Alembic migrations
       - name: Run Alembic migrations
-        run: alembic upgrade head
         env:
           DATABASE_URL: ${{ secrets.RENDER_DATABASE_URL }}
+        run: |
+          echo "Using DATABASE_URL=$DATABASE_URL"
+          alembic upgrade head
 
       # 6. Trigger Render deployment
       - name: Trigger Render deploy
